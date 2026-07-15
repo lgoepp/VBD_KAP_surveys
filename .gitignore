@@ -11,23 +11,17 @@ Thumbs.db
 
 # Raw and external data
 /data/raw/*
-!/data/raw/README.md
 /data/external/*
-!/data/external/README.md
 
 # Generated processed data
 /data/processed/*
-!/data/processed/README.md
 
 # Generated outputs
 /output/*
-!/output/README.md
 !/output/figures/
 !/output/tables/
 /output/figures/*
-!/output/figures/README.md
 /output/tables/*
-!/output/tables/README.md
 
 # Temporary files
 *.tmp

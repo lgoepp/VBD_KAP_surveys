@@ -380,36 +380,74 @@ summarise_stakeholder_categorical <- function(data, variable, question, section,
   })
 }
 
-summarise_stakeholder_checkboxes <- function(data, variables, labels, question, section, eligible = function(x) rep(TRUE, nrow(x))) {
+summarise_stakeholder_checkboxes <- function(
+    data, variables, labels, question, section,
+    eligible = function(x) rep(TRUE, nrow(x)),
+    missing_variable = NULL
+) {
   purrr::imap_dfr(stakeholder_groups(data), function(group_data, group_name) {
     eligible_rows <- eligible(group_data)
     eligible_rows[is.na(eligible_rows)] <- FALSE
-    eligible_data <- group_data[eligible_rows, , drop = FALSE]
-    denominator <- nrow(eligible_data)
-    missing_total <- nrow(group_data) - denominator
+    
+    explicit_missing <- rep(FALSE, nrow(group_data))
+    if (!is.null(missing_variable)) {
+      explicit_missing <- as_binary01(group_data[[missing_variable]]) == 1L
+      explicit_missing[is.na(explicit_missing)] <- FALSE
+    }
+    
+    observed_rows <- if (length(variables)) {
+      rowSums(!is.na(group_data[, variables, drop = FALSE])) > 0L
+    } else {
+      rep(FALSE, nrow(group_data))
+    }
+    
+    included_rows <- eligible_rows & !explicit_missing & observed_rows
+    included_data <- group_data[included_rows, , drop = FALSE]
+    
+    denominator <- nrow(included_data)
+    missing_total <- sum(!included_rows)
+    
     rows <- tibble::tibble(
       section = section,
       question = question,
       response = unname(labels[variables]),
       group = group_name,
-      n = vapply(variables, function(variable) sum(as_binary01(eligible_data[[variable]]) == 1L, na.rm = TRUE), integer(1)),
+      n = vapply(
+        variables,
+        function(variable) {
+          sum(as_binary01(included_data[[variable]]) == 1L, na.rm = TRUE)
+        },
+        integer(1)
+      ),
       denominator = denominator,
       percent = 100 * safe_prop(n, denominator),
       missing_n = missing_total,
       group_n = nrow(group_data)
     )
+    
     dplyr::bind_rows(
       rows,
       tibble::tibble(
-        section = section, question = question, response = "(Missing)", group = group_name,
-        n = missing_total, denominator = NA_integer_, percent = NA_real_,
-        missing_n = missing_total, group_n = nrow(group_data)
+        section = section,
+        question = question,
+        response = "(Missing)",
+        group = group_name,
+        n = missing_total,
+        denominator = NA_integer_,
+        percent = NA_real_,
+        missing_n = missing_total,
+        group_n = nrow(group_data)
       )
     )
   })
 }
 
 make_table_s2_01 <- function(data) {
+  data <- data |>
+    dplyr::mutate(involvement = dplyr::na_if(
+        clean_chr(involvement),
+        "No information / don't know")
+    )
   reasons <- c(
     b_1_1___1 = "Introduction of measures/activities is being reviewed or planned",
     b_1_1___2 = "VBDs are not considered part of the authority's responsibilities",
@@ -420,24 +458,62 @@ make_table_s2_01 <- function(data) {
     b_1_1___7 = "Lack of public interest",
     b_1_1___8 = "Lack of political decision/mandate",
     b_1_1___9 = "Lack of national guidelines or recommendations",
-    b_1_1___10 = "No information / don't know",
     b_1_1___11 = "Other reasons"
   )
   four_option_labels <- c(
-    b_2___1 = "Yes, for tick-borne diseases", b_2___2 = "Yes, for mosquito-borne diseases",
-    b_2___3 = "No, neither for tick-borne nor mosquito-borne diseases", b_2___4 = "No information / don't know"
+    b_2___1 = "Yes, for tick-borne diseases",
+    b_2___2 = "Yes, for mosquito-borne diseases",
+    b_2___3 = "No, neither for tick-borne nor mosquito-borne diseases"
   )
-  human_resource_labels <- setNames(unname(four_option_labels), sub("b_2", "b_3", names(four_option_labels)))
-  budget_labels <- setNames(unname(four_option_labels), sub("b_2", "b_4", names(four_option_labels)))
+  human_resource_labels <- setNames(
+    unname(four_option_labels),
+    sub("b_2", "b_3", names(four_option_labels))
+  )
+  budget_labels <- setNames(
+    unname(four_option_labels),
+    sub("b_2", "b_4", names(four_option_labels))
+  )
   dplyr::bind_rows(
     summarise_stakeholder_categorical(
-      data, "involvement", "Is your authority currently involved in VBD-related measures or activities?",
-      "Involvement and resources", c("Yes", "No", "No information / don't know")
+      data,
+      "involvement",
+      "Is your authority currently involved in VBD-related measures or activities?",
+      "Involvement and resources",
+      c("Yes", "No")
     ),
-    summarise_stakeholder_checkboxes(data, names(reasons), reasons, "If no, what are the reasons?", "Involvement and resources", eligible = function(x) x$involvement == "No"),
-    summarise_stakeholder_checkboxes(data, names(four_option_labels), four_option_labels, "Do you know of any cantonal strategy or action plan?", "Involvement and resources"),
-    summarise_stakeholder_checkboxes(data, names(human_resource_labels), human_resource_labels, "Does your authority have human resources for VBD activities?", "Involvement and resources"),
-    summarise_stakeholder_checkboxes(data, names(budget_labels), budget_labels, "Does your authority have a budget for VBD activities?", "Involvement and resources")
+    summarise_stakeholder_checkboxes(
+      data,
+      names(reasons),
+      reasons,
+      "If no, what are the reasons?",
+      "Involvement and resources",
+      eligible = function(x) x$involvement == "No",
+      missing_variable = "b_1_1___10"
+    ),
+    summarise_stakeholder_checkboxes(
+      data,
+      names(four_option_labels),
+      four_option_labels,
+      "Do you know of any cantonal strategy or action plan?",
+      "Involvement and resources",
+      missing_variable = "b_2___4"
+    ),
+    summarise_stakeholder_checkboxes(
+      data,
+      names(human_resource_labels),
+      human_resource_labels,
+      "Does your authority have human resources for VBD activities?",
+      "Involvement and resources",
+      missing_variable = "b_3___4"
+    ),
+    summarise_stakeholder_checkboxes(
+      data,
+      names(budget_labels),
+      budget_labels,
+      "Does your authority have a budget for VBD activities?",
+      "Involvement and resources",
+      missing_variable = "b_4___4"
+    )
   )
 }
 

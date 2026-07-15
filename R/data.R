@@ -132,7 +132,7 @@ check_lookup_columns <- function(data, required, filename) {
     stop(
       filename, " is missing required column(s): ",
       paste(missing, collapse = ", "),
-      ". See data/external/README.md.",
+      ". See the data-input section of the root README.md.",
       call. = FALSE
     )
   }
