@@ -1,6 +1,11 @@
-# data/processed/
-This folder contains your processed data, typically as CSV or single `R` object (RDS) files.
+# Processed data
 
-An example for the content of this folder looks like this:
-- cleaned_data.csv
-- processed_data.rds
+`Main.R` recreates this directory's contents from the raw and external inputs:
+
+```text
+beready_all.rds
+beready_analysis.rds
+stakeholder_analysis.rds
+```
+
+These files are generated artifacts and are ignored by Git.

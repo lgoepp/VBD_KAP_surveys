@@ -1,2 +1,5 @@
-# output/
-The folders inside this folder contain the generated output using code from the `R` and `products` folders. The folder `figures` contains figures and the folder `tables` contains tables in various formats.
+# Generated outputs
+
+`Main.R` writes publication figures to `figures/`, numbered CSV tables to `tables/`, and R session information to `sessionInfo.txt`.
+
+Generated outputs are ignored by Git by default. Adjust `.gitignore` when final publication figures or tables should be versioned.

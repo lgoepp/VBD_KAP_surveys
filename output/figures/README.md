@@ -1,6 +1,3 @@
-# output/figures/
-This folder can contain figures in various formats, such as PNG or PDF.
+# Figures
 
-An example for the content of this folder looks like this:
-- 01_figure.png
-- 02_figure.pdf
+This directory is populated by `Main.R` with Figures 1–4 in PNG format. PDF export can be enabled through `save_pdf` in `Main.R`.

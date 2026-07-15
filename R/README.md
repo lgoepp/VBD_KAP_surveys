@@ -1,8 +1,13 @@
-# R/
-This folder contains the `R` scripts that you use for the data analysis. Rather than having one large script, we advise that you use multiple numbered scripts for specific actions, such as data cleaning, data analysis, and plotting. You can then source these scripts using a main file.
+# R source files
 
-An example for the content of this folder looks like this:
-- 00_main.R
-- 01_cleaning.R
-- 02_analysis.R
-- 03_plotting.R
+The files are sourced explicitly by `Main.R` in this order:
+
+```text
+utils.R
+data.R
+analysis.R
+figures.R
+tables.R
+```
+
+Sourcing a file only defines functions and metadata; the analysis is initiated by `Main.R`.
