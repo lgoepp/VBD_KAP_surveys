@@ -59,9 +59,3 @@ The spatial codes are converted as follows:
 The attached workbook describes the spatial classifications on 1 January 2026 and reports an extraction date of 26 March 2026.
 
 `[PLACEHOLDER: add the permanent source URL, licence, and justification for using the 2026 classification with the survey data.]`
-
-## Reproducibility and redistribution
-
-The scripts expect the original workbook layouts described above and stop with a clear error when a required column is absent.
-
-These files are ignored by Git by default. Before publishing the repository, decide whether the licences permit redistribution. Otherwise, retain only this README and provide download instructions or archived source URLs.
