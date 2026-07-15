@@ -137,23 +137,6 @@ table_s2_01_involvement_and_resources.csv
 table_s2_04_collaboration_and_coordination.csv
 ```
 
-The CSV files use a long, analysis-friendly representation. Counts, denominators, percentages, missing counts, means, and standard deviations are stored in separate columns rather than embedded in formatted manuscript strings.
-
 Generated intermediate datasets are written to `data/processed/`. A session-information file is written to `output/sessionInfo.txt`.
 
-## Analysis sample
 
-The primary BeReady analysis sample retains respondents who:
-
-1. classified tick-borne encephalitis as a vector-borne disease after the introductory definition; and
-2. showed no logical contradiction between vector-recognition and disease–vector matching responses.
-
-All-respondent and primary-analysis datasets are both retained because the supplementary descriptive tables compare these samples.
-
-## Reproducibility notes
-
-The script does not install packages or download data. It reads the three external Excel workbooks in their downloaded layouts and stops with an explicit message when a required package, file, worksheet, or column is absent.
-
-Open-text outputs contain aggregated verbatim responses. They must be reviewed for potentially identifying information before public release.
-
-The statistical analyses are exploratory and reproduce the analysis framework of the associated manuscript. Any material change to recoding rules, imputation settings, IRT items, regression predictors, cluster blocks, or the fixed number of clusters should be documented in the repository history.
