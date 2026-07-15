@@ -70,16 +70,6 @@ install.packages(c(
 ))
 ```
 
-For a publication release, dependency versions should be frozen with `renv`:
-
-```r
-install.packages("renv")
-renv::init()
-renv::snapshot()
-```
-
-`renv.lock` is not included in this scaffold because the scripts were written without installing or executing the analysis environment.
-
 ## Required input files
 
 Raw and restricted data are intentionally excluded from version control. Place these files under `data/raw/` or edit their paths at the top of `Main.R`:
