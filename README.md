@@ -39,11 +39,11 @@ This procedure produces one completed analytical dataset. It is not a multiple-i
 
 Overall vector-borne disease knowledge is represented by a one-dimensional two-parameter logistic item response theory model fitted with `mirt`:
 
-\[
+$$
 \Pr(Y_{ij}=1\mid\theta_i)=\operatorname{logit}^{-1}\{a_j(\theta_i-b_j)\},
-\]
+$$
 
-where \(a_j\) is item discrimination, \(b_j\) is item difficulty, and \(\theta_i\) is the latent knowledge level of respondent \(i\).
+where $a_j$ is item discrimination, $b_j$ is item difficulty, and $\theta_i$ is the latent knowledge level of respondent $i$.
 
 The final model contains 15 binary items: seven disease-classification items and eight disease-vector association items. “Do not know” responses are treated as incorrect. The organism-recognition items are not included in the IRT score because the true-vector items were almost universally answered correctly and the distractor organisms showed little variation, leading to unstable or uninformative item parameters.
 
@@ -75,7 +75,7 @@ The exploratory clustering analysis uses partitioning around medoids (PAM) with 
 6. perceived effectiveness of tick-control measures; and
 7. perceived effectiveness of mosquito-control measures.
 
-To prevent blocks with more questionnaire items from dominating the solution, each item in block \(b\) receives weight \(1/m_b\), where \(m_b\) is the number of items in that block. The resulting Gower dissimilarity therefore gives equal total weight to each conceptual block. PAM is then fitted to the dissimilarity matrix with \(k=6\). In the manuscript, this value was selected after considering internal validity, stability, minimum cluster size, and substantive interpretability; the current pipeline treats \(k=6\) as fixed and does not rerun those selection diagnostics.
+To prevent blocks with more questionnaire items from dominating the solution, each item in block $b$ receives weight $1/m_b$, where $m_b$ is the number of items in that block. The resulting Gower dissimilarity therefore gives equal total weight to each conceptual block. PAM is then fitted to the dissimilarity matrix with $k=6$. In the manuscript, this value was selected after considering internal validity, stability, minimum cluster size, and substantive interpretability; the current pipeline treats $k=6$ as fixed and does not rerun those selection diagnostics.
 
 Sociodemographic characteristics, municipality classification, vector exposure, and travel history are not used to form the clusters. They are summarized only after cluster assignment. Figure 4 reports cluster sizes, block-level profiles, and selected post hoc composition variables.
 
