@@ -39,9 +39,9 @@ This procedure produces one completed analytical dataset. It is not a multiple-i
 
 Overall vector-borne disease knowledge is represented by a one-dimensional two-parameter logistic item response theory model fitted with `mirt`:
 
-$$
+```math
 \Pr(Y_{ij}=1\mid\theta_i)=\operatorname{logit}^{-1}\{a_j(\theta_i-b_j)\},
-$$
+```
 
 where $a_j$ is item discrimination, $b_j$ is item difficulty, and $\theta_i$ is the latent knowledge level of respondent $i$.
 
